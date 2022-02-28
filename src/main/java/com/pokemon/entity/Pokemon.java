@@ -26,7 +26,7 @@ public class Pokemon {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id")
+	@Column(name = "idpokemon")
 	private Long id;
 	
 	@NotNull
@@ -40,6 +40,14 @@ public class Pokemon {
 	@ManyToOne
 	@JoinColumn(name = "usuario_id")
 	private Usuario usuario;
+	
+	@ManyToMany(fetch=FetchType.LAZY ,cascade= {CascadeType.PERSIST,CascadeType.MERGE})
+	@JoinTable(
+		name="pokemon_tipo",
+				joinColumns=@JoinColumn(name="idpokemon"),
+				inverseJoinColumns= @JoinColumn(name="idTipo")
+	)
+	private List<Tipo> tipos =new ArrayList<>();
 
 	@Override
 	public int hashCode() {
