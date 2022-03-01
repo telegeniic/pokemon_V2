@@ -13,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.pokemon.error.NoUniqueNamesException;
 import com.pokemon.request.CreateUserRequest;
 
 import lombok.Getter;
@@ -44,6 +45,7 @@ public class Usuario {
 	@Column(name = "password")
 	private String password;
 	
+
 	public Long getId() {
 		return id;
 	}
@@ -100,6 +102,9 @@ public class Usuario {
 		this.pokemones = pokemones;
 	}
 
+
+	String pattern = "(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}";
+
 	@OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
 	private List<Pokemon> pokemones;
 	
@@ -108,8 +113,12 @@ public class Usuario {
 		this.traineerName = createUserRequest.getTraineerName();
 		this.role = createUserRequest.getRole();
 		this.username = createUserRequest.getUsername();
-		this.password = createUserRequest.getPassword();
 		
+		if(createUserRequest.getPassword().matches(pattern)) {
+			this.password = createUserRequest.getPassword();
+		} else {
+			throw new NoUniqueNamesException("Contraseña inválida");
+		}
 		
 	}
 	public Usuario(){
@@ -132,6 +141,7 @@ public class Usuario {
 		Usuario other = (Usuario) obj;
 		return Objects.equals(username, other.username);
 	}
+
 	
 	
 
