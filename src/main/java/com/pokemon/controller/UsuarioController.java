@@ -14,20 +14,20 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.pokemon.entity.Pokemon;
 import com.pokemon.entity.Usuario;
 import com.pokemon.reponse.JWTAuthResponse;
+import com.pokemon.reponse.PokemonListResponse;
 import com.pokemon.reponse.PokemonResponse;
 import com.pokemon.reponse.UsuarioResponse;
 import com.pokemon.request.CreateUserRequest;
@@ -47,13 +47,8 @@ import io.swagger.annotations.ApiOperation;
 
 @RestController
 @RequestMapping("/pokemon/")
-
 @Api(value="API REST Pokemons")
-
-@CrossOrigin(origins = "*", maxAge = 3600, 
-	methods= {RequestMethod.GET,RequestMethod.POST,RequestMethod.DELETE, RequestMethod.PATCH, RequestMethod.DELETE})
-
-
+@CrossOrigin()
 public class UsuarioController {
 	
 	@Autowired
@@ -72,7 +67,7 @@ public class UsuarioController {
 
 	@GetMapping("pokemons/{username}")
 	@ApiOperation(value="Obtaining the pokemons team of selected User by id")
-	public List<PokemonResponse> getAllPokemonsByUser(@PathVariable String username) {
+	public PokemonListResponse getAllPokemonsByUser(@PathVariable String username) {
 		List<Pokemon> pokemonList = usuarioService.getAllPokemonsByUser(username);
 		
 		List<PokemonResponse> pokemonResponseList = new ArrayList<PokemonResponse>();
@@ -80,8 +75,10 @@ public class UsuarioController {
 		pokemonList.stream().forEach(pokemon -> {
 			pokemonResponseList.add(new PokemonResponse(pokemon));
 		});
+
+		PokemonListResponse response = new PokemonListResponse(pokemonResponseList);
 		
-		return pokemonResponseList;
+		return response;
 	}
 
 	@PostMapping("create")
@@ -95,11 +92,11 @@ public class UsuarioController {
 	}
   
 	//@PreAuthorize("hasAnyRole('Administrador','Provisional')")
-	@CrossOrigin(origins = "*", maxAge = 3600, methods= {RequestMethod.DELETE,RequestMethod.PATCH})
-	@PatchMapping("update")
+	@PutMapping("update")
 	@ApiOperation("Update Data General user & add new Pokemons to the team! ")
 	//Update the data for the user
 	public UsuarioResponse updateUser(@Valid @RequestBody UpdateUserRequest updateUser) {
+		log.info("Updating user: "+updateUser.getUsername());
 		return new UsuarioResponse(usuarioService.updateData(updateUser));
 	}
 	
@@ -135,6 +132,13 @@ public class UsuarioController {
         return ResponseEntity.ok(new JWTAuthResponse(token));
 
     }
+	//Delete the username by username
+	@ApiOperation("Delete a user when connection failure")
+	@DeleteMapping("/delete/{username}")
+	public void  deleteUser(@PathVariable String username) {
+		usuarioService.deleteUser(username);
+		
+	}
 
     
 

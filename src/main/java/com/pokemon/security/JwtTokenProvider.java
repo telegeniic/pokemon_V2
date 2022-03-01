@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component;
 
 import com.pokemon.entity.Usuario;
 import com.pokemon.error.APIException;
-import com.pokemon.repository.UsuarioRepository;
 import com.pokemon.service.UsuarioService;
 
 import io.jsonwebtoken.Claims;

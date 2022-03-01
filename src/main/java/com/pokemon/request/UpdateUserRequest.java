@@ -42,6 +42,54 @@ public class UpdateUserRequest {
 	@UniqueElements
 	private List<CreatePokemonRequest> pokemon;
 
+	public String getTeamName() {
+		return teamName;
+	}
+
+	public void setTeamName(String teamName) {
+		this.teamName = teamName;
+	}
+
+	public String getTraineerName() {
+		return traineerName;
+	}
+
+	public void setTraineerName(String traineerName) {
+		this.traineerName = traineerName;
+	}
+
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
+	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public List<CreatePokemonRequest> getPokemon() {
+		return pokemon;
+	}
+
+	public void setPokemon(List<CreatePokemonRequest> pokemon) {
+		this.pokemon = pokemon;
+	}
+
 
 	
 }

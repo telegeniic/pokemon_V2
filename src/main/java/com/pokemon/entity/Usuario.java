@@ -16,12 +16,10 @@ import javax.persistence.Table;
 import com.pokemon.request.CreateUserRequest;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @Entity
 @Table(name = "usuario")
 public class Usuario {
@@ -46,6 +44,62 @@ public class Usuario {
 	@Column(name = "password")
 	private String password;
 	
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public String getTeamName() {
+		return teamName;
+	}
+
+	public void setTeamName(String teamName) {
+		this.teamName = teamName;
+	}
+
+	public String getTraineerName() {
+		return traineerName;
+	}
+
+	public void setTraineerName(String traineerName) {
+		this.traineerName = traineerName;
+	}
+
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
+	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public List<Pokemon> getPokemones() {
+		return pokemones;
+	}
+
+	public void setPokemones(List<Pokemon> pokemones) {
+		this.pokemones = pokemones;
+	}
+
 	@OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
 	private List<Pokemon> pokemones;
 	
@@ -56,6 +110,9 @@ public class Usuario {
 		this.username = createUserRequest.getUsername();
 		this.password = createUserRequest.getPassword();
 		
+		
+	}
+	public Usuario(){
 		
 	}
 
