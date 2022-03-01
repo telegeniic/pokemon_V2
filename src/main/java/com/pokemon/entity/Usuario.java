@@ -14,7 +14,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.pokemon.error.APIException;
-import com.pokemon.error.NoUniqueNamesException;
 import com.pokemon.request.CreateUserRequest;
 
 import org.springframework.http.HttpStatus;
