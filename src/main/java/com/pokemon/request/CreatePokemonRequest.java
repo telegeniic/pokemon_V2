@@ -25,5 +25,27 @@ public class CreatePokemonRequest {
 	@NotEmpty
 	@JsonProperty("tipo_pokemon")
 	private String tipo_pokemon;
+
+
+	public String getNombre_pokemon() {
+		return nombre_pokemon;
+	}
+
+
+	public void setNombre_pokemon(String nombre_pokemon) {
+		this.nombre_pokemon = nombre_pokemon;
+	}
+
+
+	public String getTipo_pokemon() {
+		return tipo_pokemon;
+	}
+
+
+	public void setTipo_pokemon(String tipo_pokemon) {
+		this.tipo_pokemon = tipo_pokemon;
+	}
+	
+
 	
 }
