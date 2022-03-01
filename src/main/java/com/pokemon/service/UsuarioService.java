@@ -9,7 +9,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import org.springframework.http.HttpStatus;
 import com.pokemon.entity.Pokemon;
 import com.pokemon.entity.Tipo;
 import com.pokemon.entity.Usuario;
@@ -145,7 +144,6 @@ public class UsuarioService {
 		Usuario user = usuarioRepository.findByUsername(updateUser.getUsername()).orElseThrow( () -> new APIException(HttpStatus.NOT_FOUND, "User not found"));
 		user.setTraineerName(updateUser.getTraineerName());
 		user.setTeamName(updateUser.getTeamName());
-		user.setRole(updateUser.getRole());
 		
 		
 		if(!updateUser.getPassword().isBlank() && !user.getPassword().equals(updateUser.getPassword())) 
