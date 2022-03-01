@@ -13,11 +13,7 @@ public class ErrorDetails {
 	private HttpStatus httpStatus;
 	private String message;
 	private String details;
-	public ErrorDetails(HttpStatus httpStatus, String message, String details) {
-		this.httpStatus = httpStatus;
-		this.message = message;
-		this.details = details;
-	}
+
 	public HttpStatus getHttpStatus() {
 		return httpStatus;
 	}

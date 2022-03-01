@@ -9,10 +9,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.pokemon.entity.Pokemon;
+import com.pokemon.entity.Tipo;
 import com.pokemon.entity.Usuario;
 import com.pokemon.error.APIException;
 import com.pokemon.error.NoUniqueNamesException;
 import com.pokemon.repository.PokemonRepository;
+import com.pokemon.repository.TipoRespository;
 import com.pokemon.repository.UsuarioRepository;
 import com.pokemon.request.CreatePokemonRequest;
 import com.pokemon.request.CreateUserRequest;
@@ -30,6 +32,9 @@ public class UsuarioService {
 
 	@Autowired
 	PokemonRepository pokemonRepository;
+
+	@Autowired
+	TipoRespository tipoRespository;
 
 	@Autowired
 	PasswordEncoder passwordEncoder;
@@ -51,7 +56,7 @@ public class UsuarioService {
 			for (CreatePokemonRequest createPokemonRequest : createUserRequest.getPokemon()) {
 				Pokemon pokemon = new Pokemon();
 				pokemon.setName(createPokemonRequest.getNombre_pokemon());
-				pokemon.setType(createPokemonRequest.getTipo_pokemon());
+				//pokemon.setType(createPokemonRequest.getTipo_pokemon());
 				pokemon.setUsuario(usuario);
 
 				pokemonList.add(pokemon);
@@ -87,16 +92,25 @@ public class UsuarioService {
 		
 		if(!updateUser.getPassword().isBlank() && !user.getPassword().equals(updateUser.getPassword())) 
 			user.setPassword(passwordEncoder.encode(updateUser.getPassword()));
-		
-		user = usuarioRepository.save(user);
+
 		if (user.getRole().equals(PROVISIONAL)){
-			return user;
+			return usuarioRepository.save(user);
 		}
 
 		List<Pokemon> pokemonList = new ArrayList<Pokemon>();
 		if (updateUser.getPokemon() != null) {
 			for (CreatePokemonRequest pokemon : updateUser.getPokemon()) {
-				Pokemon newPokemon = new Pokemon(pokemon, user);
+				Pokemon newPokemon = new Pokemon();
+				newPokemon.setName(pokemon.getNombre_pokemon());
+				newPokemon.setUsuario(user);
+				List<Tipo> tipos = new ArrayList<>();
+				pokemon.getTipo_pokemon().forEach(tipo -> {
+					Tipo newTipo = tipoRespository.findByTipo(tipo).orElseThrow(() -> {
+						throw new APIException(HttpStatus.NOT_FOUND, "Pokemon type not found");
+					});
+					tipos.add(newTipo);
+				});
+				newPokemon.setTipos(tipos);
 
 				if (user.getPokemones().contains(newPokemon)) {
 					throw new APIException(HttpStatus.CONFLICT,"Pokemon already exist");
@@ -111,7 +125,7 @@ public class UsuarioService {
 
 		}
 		user.setPokemones(pokemonList);
-		return user;
+		return usuarioRepository.save(user);
 	}
 
 	public Usuario getUserbyId(long id) {

@@ -20,11 +20,6 @@ public class APIException extends RuntimeException {
 	private HttpStatus status;
     private String message;
 
-public APIException (HttpStatus status, String mensaje){
-	this.status=status;
-	this.message=mensaje;
-}
-
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}

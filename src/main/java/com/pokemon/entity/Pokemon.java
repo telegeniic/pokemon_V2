@@ -57,12 +57,6 @@ public class Pokemon {
 	)
 	private List<Tipo> tipos =new ArrayList<>();
 
-	public Pokemon(CreatePokemonRequest pokemonRequest, Usuario user){
-		this.name = pokemonRequest.getNombre_pokemon();
-		this.type = pokemonRequest.getTipo_pokemon();
-		this.usuario = user;
-	}
-
 	@Override
 	public int hashCode() {
 		return Objects.hash(name, usuario);
