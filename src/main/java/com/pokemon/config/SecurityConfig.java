@@ -1,8 +1,5 @@
 package com.pokemon.config;
 
-import java.util.Arrays;
-
-import org.hibernate.engine.config.internal.ConfigurationServiceInitiator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,9 +13,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.session.SessionManagementFilter;
-
-import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
 
 
 import com.pokemon.security.CustomUserDetailsService;

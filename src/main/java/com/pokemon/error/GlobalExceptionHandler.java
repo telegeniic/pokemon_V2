@@ -70,6 +70,18 @@ public class GlobalExceptionHandler {
 		log.error(" A error has ocurred: " + error.getMessage() + " on " + error.getDetails());
 	}
 	
+
+	@ExceptionHandler(TypePokemonException.class)
+	public ResponseEntity<ErrorDetails> handleResourceTypePokemonException(TypePokemonException exception, 
+			WebRequest webrequest){
+
+
+		ErrorDetails error = new ErrorDetails(HttpStatus.INTERNAL_SERVER_ERROR, exception.getMessage(), webrequest.getDescription(false));
+
+		error(error);
+
+		return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
+	}
 	
 
 }
