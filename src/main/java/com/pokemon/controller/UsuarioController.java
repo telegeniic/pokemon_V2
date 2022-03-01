@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.pokemon.entity.Pokemon;
 import com.pokemon.entity.Usuario;
 import com.pokemon.reponse.JWTAuthResponse;
+import com.pokemon.reponse.PokemonListResponse;
 import com.pokemon.reponse.PokemonResponse;
 import com.pokemon.reponse.UsuarioResponse;
 import com.pokemon.request.CreateUserRequest;
@@ -66,7 +67,7 @@ public class UsuarioController {
 
 	@GetMapping("pokemons/{username}")
 	@ApiOperation(value="Obtaining the pokemons team of selected User by id")
-	public List<PokemonResponse> getAllPokemonsByUser(@PathVariable String username) {
+	public PokemonListResponse getAllPokemonsByUser(@PathVariable String username) {
 		List<Pokemon> pokemonList = usuarioService.getAllPokemonsByUser(username);
 		
 		List<PokemonResponse> pokemonResponseList = new ArrayList<PokemonResponse>();
@@ -74,8 +75,10 @@ public class UsuarioController {
 		pokemonList.stream().forEach(pokemon -> {
 			pokemonResponseList.add(new PokemonResponse(pokemon));
 		});
+
+		PokemonListResponse response = new PokemonListResponse(pokemonResponseList);
 		
-		return pokemonResponseList;
+		return response;
 	}
 
 	@PostMapping("create")
