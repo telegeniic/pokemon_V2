@@ -7,7 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import org.springframework.http.HttpStatus;
 import com.pokemon.entity.Pokemon;
 import com.pokemon.entity.Tipo;
 import com.pokemon.entity.Usuario;
@@ -22,6 +24,7 @@ import com.pokemon.request.CreatePokemonRequest;
 import com.pokemon.request.CreateUserRequest;
 import com.pokemon.request.UpdateUserRequest;
 
+@Transactional
 @Service
 public class UsuarioService {
 
@@ -196,6 +199,21 @@ public class UsuarioService {
 	public Usuario getByUsername(String username) {
 		return usuarioRepository.findByUsername(username).get();
 	}
+	
+	//delete username
+	
+	public String deleteUser(String username) {
+		Usuario usuario = usuarioRepository.findByUsername(username).orElseThrow(() -> {
+			throw new APIException(HttpStatus.NOT_FOUND, "User not found");
+					
+		});
+		usuarioRepository.deleteById(usuario.getId());
+		//usuarioRepository.deleteByUsername(username);
+		return "User deleted succesfully";
+
+	}
+	
+
 
 	public void validarCantidad(CreateUserRequest userRequest){
 		if(userRequest.getRole().toUpperCase().equals("ADMIN")){
