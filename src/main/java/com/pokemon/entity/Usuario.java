@@ -16,12 +16,10 @@ import javax.persistence.Table;
 import com.pokemon.request.CreateUserRequest;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @Entity
 @Table(name = "usuario")
 public class Usuario {
@@ -112,6 +110,9 @@ public class Usuario {
 		this.username = createUserRequest.getUsername();
 		this.password = createUserRequest.getPassword();
 		
+		
+	}
+	public Usuario(){
 		
 	}
 

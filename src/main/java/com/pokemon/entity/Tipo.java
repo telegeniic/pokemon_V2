@@ -2,18 +2,13 @@ package com.pokemon.entity;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import java.util.Set;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
@@ -40,5 +35,12 @@ public class Tipo {
 	
 	@ManyToMany(fetch=FetchType.LAZY,mappedBy="tipos")
 	private List<Pokemon> pokemons =new ArrayList<>();
+
+	public void setTipo(String tipo){
+		this.tipo=tipo;
+	}
+	public String getTipo(){
+		return tipo;
+	}
 
 }

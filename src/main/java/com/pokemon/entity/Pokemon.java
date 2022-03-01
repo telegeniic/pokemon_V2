@@ -3,8 +3,6 @@ package com.pokemon.entity;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -18,8 +16,6 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
-
-import com.pokemon.request.CreatePokemonRequest;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -41,9 +37,6 @@ public class Pokemon {
 	@Column(name = "nombre_pokemon")
 	private String name;
 	
-	
-	@Column(name = "tipo_pokemon")//crear tabla 
-	private String type;
 	
 	@ManyToOne
 	@JoinColumn(name = "usuario_id")
@@ -90,13 +83,6 @@ public class Pokemon {
 		this.name = name;
 	}
 
-	public String getType() {
-		return type;
-	}
-
-	public void setType(String type) {
-		this.type = type;
-	}
 
 	public Usuario getUsuario() {
 		return usuario;

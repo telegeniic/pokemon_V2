@@ -13,8 +13,9 @@ import com.pokemon.entity.Tipo;
 import com.pokemon.entity.Usuario;
 import com.pokemon.error.APIException;
 import com.pokemon.error.NoUniqueNamesException;
+import com.pokemon.error.TypePokemonException;
 import com.pokemon.repository.PokemonRepository;
-import com.pokemon.repository.TipoRespository;
+import com.pokemon.repository.TipoRepository;
 import com.pokemon.repository.UsuarioRepository;
 import com.pokemon.request.CreatePokemonRequest;
 import com.pokemon.request.CreateUserRequest;
@@ -34,12 +35,21 @@ public class UsuarioService {
 	PokemonRepository pokemonRepository;
 
 	@Autowired
-	TipoRespository tipoRespository;
+	TipoRepository tipoRespository;
 
 	@Autowired
 	PasswordEncoder passwordEncoder;
+	
+	@Autowired
+    TipoRepository tipoRepository;
+
+	
+	@Autowired
+	TipoService tipoService;
 
 	public Usuario createUsuario(CreateUserRequest createUserRequest) {
+		
+		tipoService.agregarTipos();
 
 		Usuario usuario = new Usuario(createUserRequest);
 		usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
@@ -48,15 +58,45 @@ public class UsuarioService {
 				usuario.getUsername()) != null) {
 			throw new NoUniqueNamesException("Username, team name, and traineer name is already taken. ");
 		}
+		
 		usuario = usuarioRepository.save(usuario);
+		
 
 		List<Pokemon> pokemonList = new ArrayList<Pokemon>();
 
 		if (createUserRequest.getPokemon() != null) {
 			for (CreatePokemonRequest createPokemonRequest : createUserRequest.getPokemon()) {
 				Pokemon pokemon = new Pokemon();
+				List<Tipo> tipos_pokemon=new ArrayList<Tipo>();
 				pokemon.setName(createPokemonRequest.getNombre_pokemon());
-				//pokemon.setType(createPokemonRequest.getTipo_pokemon());
+
+				if(createPokemonRequest.getTipo_pokemon().isEmpty()){
+					this.deleteUser(usuario.getId());
+					throw new TypePokemonException("Pokemon type's list is empty");
+				}
+
+				if(createPokemonRequest.getNombre_pokemon().isEmpty()||
+				createPokemonRequest.getNombre_pokemon()==null){
+					this.deleteUser(usuario.getId());
+					throw new TypePokemonException("Pokemon name´s is empty");
+				}
+				for (String nombreTipo:createPokemonRequest.getTipo_pokemon()){
+					Tipo type=new Tipo();
+					
+					for(Tipo name:tipoRepository.findAll()){
+						if((nombreTipo.toLowerCase()).equals(name.getTipo().toLowerCase())){
+							type=tipoService.getTipo(nombreTipo);
+							tipos_pokemon.add(type);
+							break;
+						}
+					}
+
+					if(type.getTipo()==null){
+					this.deleteUser(usuario.getId());
+					throw new TypePokemonException("Pokemon type's not exist");
+					}
+				}
+				pokemon.setTipos(tipos_pokemon);
 				pokemon.setUsuario(usuario);
 
 				pokemonList.add(pokemon);
@@ -64,6 +104,9 @@ public class UsuarioService {
 
 			pokemonRepository.saveAll(pokemonList);
 
+		}else{
+			this.deleteUser(usuario.getId());
+		throw new TypePokemonException("Pokemon list´s is empty");
 		}
 
 		usuario.setPokemones(pokemonList);
@@ -74,6 +117,11 @@ public class UsuarioService {
 	public List<Pokemon> getAllPokemonsByUser(String username) {
 		Usuario usuario = usuarioRepository.findByUsername(username).get();
 		return usuario.getPokemones();
+	}
+
+	public void deleteUser(long id) {
+		usuarioRepository.deleteById(id);
+
 	}
 
 	public String deletePokemon(long id) {
@@ -105,9 +153,7 @@ public class UsuarioService {
 				newPokemon.setUsuario(user);
 				List<Tipo> tipos = new ArrayList<>();
 				pokemon.getTipo_pokemon().forEach(tipo -> {
-					Tipo newTipo = tipoRespository.findByTipo(tipo).orElseThrow(() -> {
-						throw new APIException(HttpStatus.NOT_FOUND, "Pokemon type not found");
-					});
+					Tipo newTipo = tipoService.getTipo(tipo);
 					tipos.add(newTipo);
 				});
 				newPokemon.setTipos(tipos);
