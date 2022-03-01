@@ -13,6 +13,7 @@ import com.pokemon.entity.Tipo;
 import com.pokemon.entity.Usuario;
 import com.pokemon.error.APIException;
 import com.pokemon.error.NoUniqueNamesException;
+import com.pokemon.error.RolException;
 import com.pokemon.error.TypePokemonException;
 import com.pokemon.repository.PokemonRepository;
 import com.pokemon.repository.TipoRepository;
@@ -58,7 +59,13 @@ public class UsuarioService {
 				usuario.getUsername()) != null) {
 			throw new NoUniqueNamesException("Username, team name, and traineer name is already taken. ");
 		}
+		List<String> roles = new ArrayList<String>();
+		roles.add("ADMIN");
+		roles.add("USER");
+		if(!(roles.contains(createUserRequest.getRole().toUpperCase())))
+		throw new RolException("Role doesn't exist");
 		
+		this.validarCantidad(createUserRequest);
 		usuario = usuarioRepository.save(usuario);
 		
 
@@ -188,6 +195,20 @@ public class UsuarioService {
 	
 	public Usuario getByUsername(String username) {
 		return usuarioRepository.findByUsername(username).get();
+	}
+
+	public void validarCantidad(CreateUserRequest userRequest){
+		if(userRequest.getRole().toUpperCase().equals("ADMIN")){
+			if(userRequest.getPokemon().size()>10){
+				throw new RolException("You can  add 10 pokemons as maximun");
+			}
+		}
+		else{
+				if(userRequest.getPokemon().size()>5){
+					throw new RolException("You can  add 5 pokemons as maximun");
+				}
+			
+		}
 	}
 
 }
