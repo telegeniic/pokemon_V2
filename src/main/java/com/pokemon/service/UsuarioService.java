@@ -8,9 +8,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.pokemon.entity.Pokemon;
+import com.pokemon.entity.Tipo;
 import com.pokemon.entity.Usuario;
 import com.pokemon.error.NoUniqueNamesException;
+import com.pokemon.error.TypePokemonException;
 import com.pokemon.repository.PokemonRepository;
+import com.pokemon.repository.TipoRepository;
 import com.pokemon.repository.UsuarioRepository;
 import com.pokemon.request.CreatePokemonRequest;
 import com.pokemon.request.CreateUserRequest;
@@ -27,8 +30,17 @@ public class UsuarioService {
 
 	@Autowired
 	PasswordEncoder passwordEncoder;
+	
+	@Autowired
+    TipoRepository tipoRepository;
+
+	
+	@Autowired
+	TipoService tipoService;
 
 	public Usuario createUsuario(CreateUserRequest createUserRequest) {
+		
+		tipoService.agregarTipos();
 
 		Usuario usuario = new Usuario(createUserRequest);
 		usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
@@ -44,8 +56,25 @@ public class UsuarioService {
 		if (createUserRequest.getPokemon() != null) {
 			for (CreatePokemonRequest createPokemonRequest : createUserRequest.getPokemon()) {
 				Pokemon pokemon = new Pokemon();
+				List<Tipo> tipos_pokemon=new ArrayList<Tipo>();
 				pokemon.setName(createPokemonRequest.getNombre_pokemon());
-				pokemon.setType(createPokemonRequest.getTipo_pokemon());
+				
+				for (String nombreTipo:createPokemonRequest.getTipo_pokemon()){
+					Tipo type=new Tipo();
+					
+					for(Tipo name:tipoRepository.findAll()){
+						if((nombreTipo.toLowerCase()).equals(name.getTipo().toLowerCase())){
+							type=tipoService.getTipo(nombreTipo);
+							tipos_pokemon.add(type);
+							break;
+						}
+					}
+
+					if(type.getTipo()==null)
+					this.deleteUser(usuario.getId());
+					throw new TypePokemonException("Pokemon type's not exist");
+				}
+				pokemon.setTipos(tipos_pokemon);
 				pokemon.setUsuario(usuario);
 
 				pokemonList.add(pokemon);
@@ -63,6 +92,11 @@ public class UsuarioService {
 	public List<Pokemon> getAllPokemonsByUser(String username) {
 		Usuario usuario = usuarioRepository.findByUsername(username).get();
 		return usuario.getPokemones();
+	}
+
+	public void deleteUser(long id) {
+		usuarioRepository.deleteById(id);
+
 	}
 
 	public String deletePokemon(long id) {
@@ -93,7 +127,7 @@ public class UsuarioService {
 			for (CreatePokemonRequest createPokemonRequest : updateUser.getPokemon()) {
 				Pokemon pokemon = new Pokemon();
 				pokemon.setName(createPokemonRequest.getNombre_pokemon());
-				pokemon.setType(createPokemonRequest.getTipo_pokemon());
+				//pokemon.setType(createPokemonRequest.getTipo_pokemon());
 				pokemon.setUsuario(user);
 
 				if (user.getPokemones().contains(pokemon)) {
