@@ -56,6 +56,7 @@ public class UsuarioService {
 		if(!(roles.contains(createUserRequest.getRole().toUpperCase())))
 		throw new RolException("Role doesn't exist");
 		
+		this.validarCantidad(createUserRequest);
 		usuario = usuarioRepository.save(usuario);
 		
 
@@ -174,6 +175,20 @@ public class UsuarioService {
 	
 	public Usuario getByUsername(String username) {
 		return usuarioRepository.findByUsername(username).get();
+	}
+
+	public void validarCantidad(CreateUserRequest userRequest){
+		if(userRequest.getRole().toUpperCase().equals("ADMIN")){
+			if(userRequest.getPokemon().size()>10){
+				throw new RolException("You can  add 10 pokemons as maximun");
+			}
+		}
+		else{
+				if(userRequest.getPokemon().size()>5){
+					throw new RolException("You can  add 5 pokemons as maximun");
+				}
+			
+		}
 	}
 
 }
