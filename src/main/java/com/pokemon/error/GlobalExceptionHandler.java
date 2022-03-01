@@ -83,6 +83,18 @@ public class GlobalExceptionHandler {
 		return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
+	@ExceptionHandler(RolException.class)
+	public ResponseEntity<ErrorDetails> handleResourceRolException(RolException exception, 
+			WebRequest webrequest){
+
+
+		ErrorDetails error = new ErrorDetails(HttpStatus.INTERNAL_SERVER_ERROR, exception.getMessage(), webrequest.getDescription(false));
+
+		error(error);
+
+		return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+
 	
 	
 

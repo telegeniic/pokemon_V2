@@ -11,6 +11,7 @@ import com.pokemon.entity.Pokemon;
 import com.pokemon.entity.Tipo;
 import com.pokemon.entity.Usuario;
 import com.pokemon.error.NoUniqueNamesException;
+import com.pokemon.error.RolException;
 import com.pokemon.error.TypePokemonException;
 import com.pokemon.repository.PokemonRepository;
 import com.pokemon.repository.TipoRepository;
@@ -49,6 +50,11 @@ public class UsuarioService {
 				usuario.getUsername()) != null) {
 			throw new NoUniqueNamesException("Username, team name, and traineer name is already taken. ");
 		}
+		List<String> roles = new ArrayList<String>();
+		roles.add("ADMIN");
+		roles.add("USER");
+		if(!(roles.contains(createUserRequest.getRole().toUpperCase())))
+		throw new RolException("Role doesn't exist");
 		
 		usuario = usuarioRepository.save(usuario);
 		
