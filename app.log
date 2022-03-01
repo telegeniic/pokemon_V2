@@ -1,0 +1,26 @@
+2022-03-01 10:31:49.387  INFO 11660 --- [main] com.pokemon.Application                  : Starting Application using Java 17.0.1 on E-JMGUAJARDO with PID 11660 (C:\Users\e-jmguajardo\Documents\repos\Java\pokemon2\pokemon_2.0-main\bin\main started by e-jmguajardo in C:\Users\e-jmguajardo\Documents\repos\Java\pokemon2\pokemon_2.0-main)
+2022-03-01 10:31:49.390  INFO 11660 --- [main] com.pokemon.Application                  : No active profile set, falling back to default profiles: default
+2022-03-01 10:31:50.420  INFO 11660 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2022-03-01 10:31:50.496  INFO 11660 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 65 ms. Found 2 JPA repository interfaces.
+2022-03-01 10:31:51.731  INFO 11660 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
+2022-03-01 10:31:51.757  INFO 11660 --- [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2022-03-01 10:31:51.758  INFO 11660 --- [main] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.56]
+2022-03-01 10:31:51.998  INFO 11660 --- [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2022-03-01 10:31:51.999  INFO 11660 --- [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 2535 ms
+2022-03-01 10:31:52.129  WARN 11660 --- [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2022-03-01 10:31:52.283  INFO 11660 --- [main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2022-03-01 10:31:52.358  INFO 11660 --- [main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 5.6.4.Final
+2022-03-01 10:31:52.607  INFO 11660 --- [main] o.hibernate.annotations.common.Version   : HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2022-03-01 10:31:52.810  INFO 11660 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2022-03-01 10:31:53.711  INFO 11660 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2022-03-01 10:31:53.729  INFO 11660 --- [main] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.PostgreSQLDialect
+2022-03-01 10:31:57.438  INFO 11660 --- [main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2022-03-01 10:31:57.448  INFO 11660 --- [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2022-03-01 10:31:58.952 DEBUG 11660 --- [main] edFilterInvocationSecurityMetadataSource : Adding web access control expression [permitAll] for Ant [pattern='/**']
+2022-03-01 10:31:58.954 DEBUG 11660 --- [main] edFilterInvocationSecurityMetadataSource : Adding web access control expression [authenticated] for any request
+2022-03-01 10:31:58.965  INFO 11660 --- [main] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@25b87e1b, org.springframework.security.web.context.SecurityContextPersistenceFilter@36a25457, org.springframework.security.web.header.HeaderWriterFilter@2f408960, org.springframework.security.web.authentication.logout.LogoutFilter@7212b28e, com.pokemon.security.JwtAuthenticationFilter@1299c874, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@48590849, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@220d7eb7, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@623a891d, org.springframework.security.web.session.SessionManagementFilter@4fccdd1d, org.springframework.security.web.access.ExceptionTranslationFilter@604e8a6, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@701da311]
+2022-03-01 10:31:59.359  INFO 11660 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
+2022-03-01 10:31:59.785  INFO 11660 --- [main] com.pokemon.Application                  : Started Application in 10.897 seconds (JVM running for 11.386)
+2022-03-01 10:32:06.061  INFO 11660 --- [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2022-03-01 10:32:06.067  INFO 11660 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2022-03-01 10:32:06.572  INFO 11660 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
