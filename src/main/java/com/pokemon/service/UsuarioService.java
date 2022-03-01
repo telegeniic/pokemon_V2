@@ -61,6 +61,7 @@ public class UsuarioService {
 				usuario.getUsername()) != null) {
 			throw new NoUniqueNamesException("Username, team name, and traineer name is already taken. ");
 		}
+
 		List<String> roles = new ArrayList<String>();
 		roles.add("ADMIN");
 		roles.add("USER");
@@ -68,6 +69,7 @@ public class UsuarioService {
 		throw new RolException("Role doesn't exist");
 		
 		this.validarCantidad(createUserRequest);
+
 		usuario = usuarioRepository.save(usuario);
 		
 
@@ -124,7 +126,9 @@ public class UsuarioService {
 	}
 
 	public List<Pokemon> getAllPokemonsByUser(String username) {
-		Usuario usuario = usuarioRepository.findByUsername(username).get();
+		Usuario usuario = usuarioRepository.findByUsername(username).orElseThrow(() -> {
+			throw new APIException(HttpStatus.NOT_FOUND, "User not found");
+		});
 		return usuario.getPokemones();
 	}
 
@@ -144,6 +148,10 @@ public class UsuarioService {
 		Usuario user = usuarioRepository.findByUsername(updateUser.getUsername()).orElseThrow( () -> new APIException(HttpStatus.NOT_FOUND, "User not found"));
 		user.setTraineerName(updateUser.getTraineerName());
 		user.setTeamName(updateUser.getTeamName());
+
+		if (!user.getRole().equals(updateUser.getRole())){
+			throw new APIException(HttpStatus.BAD_REQUEST, "You cant change your role");
+		}
 		
 		
 		if(!updateUser.getPassword().isBlank() && !user.getPassword().equals(updateUser.getPassword())) 
@@ -195,7 +203,9 @@ public class UsuarioService {
 	}
 	
 	public Usuario getByUsername(String username) {
-		return usuarioRepository.findByUsername(username).get();
+		return usuarioRepository.findByUsername(username).orElseThrow(() -> {
+			throw new APIException(HttpStatus.NOT_FOUND, "User not found");
+		});
 	}
 	
 	//delete username
@@ -226,5 +236,6 @@ public class UsuarioService {
 			
 		}
 	}
+
 
 }
