@@ -61,6 +61,7 @@ public class UsuarioService {
 				usuario.getUsername()) != null) {
 			throw new NoUniqueNamesException("Username, team name, and traineer name is already taken. ");
 		}
+
 		List<String> roles = new ArrayList<String>();
 		roles.add("ADMIN");
 		roles.add("USER");
@@ -68,6 +69,7 @@ public class UsuarioService {
 		throw new RolException("Role doesn't exist");
 		
 		this.validarCantidad(createUserRequest);
+
 		usuario = usuarioRepository.save(usuario);
 		
 
@@ -234,5 +236,6 @@ public class UsuarioService {
 			
 		}
 	}
+
 
 }
