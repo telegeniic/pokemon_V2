@@ -158,8 +158,12 @@ public class UsuarioService {
 				});
 				newPokemon.setTipos(tipos);
 
-				if (user.getPokemones().contains(newPokemon)) {
+				if (pokemonList.contains(newPokemon)) {
 					throw new APIException(HttpStatus.CONFLICT,"Pokemon already exist");
+				}
+				if (user.getPokemones().contains(newPokemon)) {
+					int index = user.getPokemones().indexOf(newPokemon);
+					pokemonList.add(user.getPokemones().get(index));
 				}
 				pokemonList.add(newPokemon);
 				if (user.getRole().equals(ADMINISTRADOR) && pokemonList.size()>10){
@@ -170,6 +174,10 @@ public class UsuarioService {
 			pokemonRepository.saveAll(pokemonList);
 
 		}
+		user.getPokemones().forEach(oldPokemon -> {
+			oldPokemon.setUsuario(null);
+			pokemonRepository.save(oldPokemon);
+		});
 		user.setPokemones(pokemonList);
 		return usuarioRepository.save(user);
 	}
