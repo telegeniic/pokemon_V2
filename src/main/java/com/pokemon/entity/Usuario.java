@@ -114,6 +114,9 @@ public class Usuario {
 		
 		
 	}
+	public Usuario(){
+		
+	}
 
 	@Override
 	public int hashCode() {
