@@ -37,6 +37,7 @@ public class UsuarioService {
 				usuario.getUsername()) != null) {
 			throw new NoUniqueNamesException("Username, team name, and traineer name is already taken. ");
 		}
+	
 		usuario = usuarioRepository.save(usuario);
 
 		List<Pokemon> pokemonList = new ArrayList<Pokemon>();
@@ -119,5 +120,6 @@ public class UsuarioService {
 	public Usuario getByUsername(String username) {
 		return usuarioRepository.findByUsername(username).get();
 	}
+
 
 }
