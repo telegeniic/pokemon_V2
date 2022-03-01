@@ -13,8 +13,11 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.pokemon.error.APIException;
 import com.pokemon.error.NoUniqueNamesException;
 import com.pokemon.request.CreateUserRequest;
+
+import org.springframework.http.HttpStatus;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -103,7 +106,8 @@ public class Usuario {
 	}
 
 
-	String pattern = "(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}";
+	String passPattern = "(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}";
+	String userPattern = "^[A-Za-z0-9+_.-]+@(.+)$";
 
 	@OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
 	private List<Pokemon> pokemones;
@@ -114,10 +118,15 @@ public class Usuario {
 		this.role = createUserRequest.getRole();
 		this.username = createUserRequest.getUsername();
 		
-		if(createUserRequest.getPassword().matches(pattern)) {
+		if(createUserRequest.getPassword().matches(passPattern)) {
 			this.password = createUserRequest.getPassword();
 		} else {
-			throw new NoUniqueNamesException("Contraseña inválida");
+			throw new APIException(HttpStatus.BAD_REQUEST,"Not valid password");
+		}
+		if(createUserRequest.getUsername().matches(userPattern)){
+			this.username = createUserRequest.getUsername();
+		} else {
+			throw new APIException(HttpStatus.BAD_REQUEST, "Username must be a valid email");
 		}
 		
 	}
