@@ -21,6 +21,10 @@ import com.pokemon.request.UpdateUserRequest;
 @Service
 public class UsuarioService {
 
+	private static final String[] ROLES = {"ADMINISTRADOR", "PROVISIONAL"};
+	private static final String ADMINISTRADOR = ROLES[0];
+	private static final String PROVISIONAL = ROLES[1];
+
 	@Autowired
 	UsuarioRepository usuarioRepository;
 
@@ -75,7 +79,7 @@ public class UsuarioService {
 
 	public Usuario updateData(UpdateUserRequest updateUser) {
 
-		Usuario user = usuarioRepository.findByUsername(updateUser.getUsername()).orElseThrow( () -> new APIException(HttpStatus.NOT_FOUND, "No se encontro el usuario a modificar"));
+		Usuario user = usuarioRepository.findByUsername(updateUser.getUsername()).orElseThrow( () -> new APIException(HttpStatus.NOT_FOUND, "User not found"));
 		user.setTraineerName(updateUser.getTraineerName());
 		user.setTeamName(updateUser.getTeamName());
 		user.setRole(updateUser.getRole());
@@ -85,13 +89,11 @@ public class UsuarioService {
 			user.setPassword(passwordEncoder.encode(updateUser.getPassword()));
 		
 		user = usuarioRepository.save(user);
+		if (user.getRole().equals(PROVISIONAL)){
+			return user;
+		}
 
 		List<Pokemon> pokemonList = new ArrayList<Pokemon>();
-
-		updateUser.getPokemon().forEach(pokemon -> {
-			
-
-		});
 		if (updateUser.getPokemon() != null) {
 			for (CreatePokemonRequest pokemon : updateUser.getPokemon()) {
 				Pokemon newPokemon = new Pokemon(pokemon, user);
@@ -99,16 +101,16 @@ public class UsuarioService {
 				if (user.getPokemones().contains(newPokemon)) {
 					throw new APIException(HttpStatus.CONFLICT,"Pokemon already exist");
 				}
-
 				pokemonList.add(newPokemon);
+				if (user.getRole().equals(ADMINISTRADOR) && pokemonList.size()>10){
+					throw new APIException(HttpStatus.LOCKED, "ADMIN user has a max of 10 pokemons");
+				}
 			}
 
 			pokemonRepository.saveAll(pokemonList);
 
 		}
-
 		user.setPokemones(pokemonList);
-
 		return user;
 	}
 

@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -47,13 +48,8 @@ import io.swagger.annotations.ApiOperation;
 
 @RestController
 @RequestMapping("/pokemon/")
-
 @Api(value="API REST Pokemons")
-
-@CrossOrigin(origins = "*", maxAge = 3600, 
-	methods= {RequestMethod.GET,RequestMethod.POST,RequestMethod.DELETE, RequestMethod.PATCH, RequestMethod.DELETE})
-
-
+@CrossOrigin()
 public class UsuarioController {
 	
 	@Autowired
@@ -95,11 +91,11 @@ public class UsuarioController {
 	}
   
 	//@PreAuthorize("hasAnyRole('Administrador','Provisional')")
-	@CrossOrigin(origins = "*", maxAge = 3600, methods= {RequestMethod.DELETE,RequestMethod.PATCH})
-	@PatchMapping("update")
+	@PutMapping("update")
 	@ApiOperation("Update Data General user & add new Pokemons to the team! ")
 	//Update the data for the user
 	public UsuarioResponse updateUser(@Valid @RequestBody UpdateUserRequest updateUser) {
+		log.info("Updating user: "+updateUser.getUsername());
 		return new UsuarioResponse(usuarioService.updateData(updateUser));
 	}
 	
