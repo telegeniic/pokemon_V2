@@ -135,6 +135,13 @@ public class UsuarioController {
         return ResponseEntity.ok(new JWTAuthResponse(token));
 
     }
+	//Delete the username by username
+	@ApiOperation("Delete a user when connection failure")
+	@DeleteMapping("/delete/{username}")
+	public void  deleteUser(@PathVariable String username) {
+		usuarioService.deleteUser(username);
+		
+	}
 
     
 

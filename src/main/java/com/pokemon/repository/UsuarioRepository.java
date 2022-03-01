@@ -15,6 +15,11 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 	
 
     Boolean existsByUsername(String usuario);
+    
+    //codigo agregado por servando
+    //Usuario findUserByUsername(String username);
+    
+    Long deleteByUsername(String username);
 	
     
     //Usuario findByNombreTeamOrNombreEntrenadorOrUsuario(String nombreTeam, String nombreEntrenador, String usuario);
