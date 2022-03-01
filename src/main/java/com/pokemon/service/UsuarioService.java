@@ -4,11 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.pokemon.entity.Pokemon;
 import com.pokemon.entity.Usuario;
+import com.pokemon.error.APIException;
 import com.pokemon.error.NoUniqueNamesException;
 import com.pokemon.repository.PokemonRepository;
 import com.pokemon.repository.UsuarioRepository;
@@ -73,34 +75,32 @@ public class UsuarioService {
 
 	public Usuario updateData(UpdateUserRequest updateUser) {
 
-		Usuario user = usuarioRepository.findByUsername(updateUser.getUsername()).get();
-
-		if (user != null) {
-			user.setTraineerName(updateUser.getTraineerName());
-			user.setTeamName(updateUser.getTeamName());
-			user.setRole(updateUser.getRole());
-			
-			
-			if(!updateUser.getPassword().isBlank() && !user.getPassword().equals(updateUser.getPassword())) 
-				user.setPassword(passwordEncoder.encode(updateUser.getPassword()));
-			
-			user = usuarioRepository.save(user);
-		}
+		Usuario user = usuarioRepository.findByUsername(updateUser.getUsername()).orElseThrow( () -> new APIException(HttpStatus.NOT_FOUND, "No se encontro el usuario a modificar"));
+		user.setTraineerName(updateUser.getTraineerName());
+		user.setTeamName(updateUser.getTeamName());
+		user.setRole(updateUser.getRole());
+		
+		
+		if(!updateUser.getPassword().isBlank() && !user.getPassword().equals(updateUser.getPassword())) 
+			user.setPassword(passwordEncoder.encode(updateUser.getPassword()));
+		
+		user = usuarioRepository.save(user);
 
 		List<Pokemon> pokemonList = new ArrayList<Pokemon>();
 
-		if (updateUser.getPokemon() != null) {
-			for (CreatePokemonRequest createPokemonRequest : updateUser.getPokemon()) {
-				Pokemon pokemon = new Pokemon();
-				pokemon.setName(createPokemonRequest.getNombre_pokemon());
-				pokemon.setType(createPokemonRequest.getTipo_pokemon());
-				pokemon.setUsuario(user);
+		updateUser.getPokemon().forEach(pokemon -> {
+			
 
-				if (user.getPokemones().contains(pokemon)) {
-					throw new NoUniqueNamesException("Pokemon already exist");
+		});
+		if (updateUser.getPokemon() != null) {
+			for (CreatePokemonRequest pokemon : updateUser.getPokemon()) {
+				Pokemon newPokemon = new Pokemon(pokemon, user);
+
+				if (user.getPokemones().contains(newPokemon)) {
+					throw new APIException(HttpStatus.CONFLICT,"Pokemon already exist");
 				}
 
-				pokemonList.add(pokemon);
+				pokemonList.add(newPokemon);
 			}
 
 			pokemonRepository.saveAll(pokemonList);

@@ -13,6 +13,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import com.pokemon.request.CreatePokemonRequest;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -40,6 +42,12 @@ public class Pokemon {
 	@ManyToOne
 	@JoinColumn(name = "usuario_id")
 	private Usuario usuario;
+
+	public Pokemon(CreatePokemonRequest pokemonRequest, Usuario user){
+		this.name = pokemonRequest.getNombre_pokemon();
+		this.type = pokemonRequest.getTipo_pokemon();
+		this.usuario = user;
+	}
 
 	@Override
 	public int hashCode() {

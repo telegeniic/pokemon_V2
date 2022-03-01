@@ -25,8 +25,6 @@ public class GlobalExceptionHandler {
 
 		ErrorDetails error = new ErrorDetails(HttpStatus.INTERNAL_SERVER_ERROR, exception.getMessage(), webrequest.getDescription(false));
 
-		error(error);
-
 		return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
@@ -41,8 +39,6 @@ public class GlobalExceptionHandler {
 			message = " You must select unless a pokemon and it's type.";
 		}
 		error = new ErrorDetails(HttpStatus.INTERNAL_SERVER_ERROR,message, webrequest.getDescription(false));
-		
-		error(error);
 
 		return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -52,9 +48,11 @@ public class GlobalExceptionHandler {
 	public ResponseEntity<ErrorDetails> handleResourceBlogAPIException(APIException exception, 
 			WebRequest webrequest){
 		ErrorDetails error = new ErrorDetails(exception.getStatus(), exception.getMessage() , webrequest.getDescription(false));
-		
-		error(error);
-		return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
+		log.error("Excepcion: "+APIException.class.toString());
+		log.error("Estatus: "+exception.getStatus());
+		log.error("Mensaje: "+exception.getMessage());
+		log.error("Detalle: "+error.getDetails());
+		return new ResponseEntity<>(error, exception.getStatus());
 	}
 	
 	@ExceptionHandler(AuthenticationException.class)
@@ -62,12 +60,7 @@ public class GlobalExceptionHandler {
 			WebRequest webrequest){
 		ErrorDetails error = new ErrorDetails(HttpStatus.BAD_REQUEST, " Wrong credentials." , webrequest.getDescription(false));
 		
-		error(error);
 		return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
-	}
-	
-	private void error(ErrorDetails error) {
-		log.error(" A error has ocurred: " + error.getMessage() + " on " + error.getDetails());
 	}
 	
 	
