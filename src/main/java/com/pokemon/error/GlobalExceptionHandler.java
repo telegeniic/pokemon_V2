@@ -38,9 +38,9 @@ public class GlobalExceptionHandler {
 		}else {
 			message = " You must select unless a pokemon and it's type.";
 		}
-		error = new ErrorDetails(HttpStatus.INTERNAL_SERVER_ERROR,message, webrequest.getDescription(false));
+		error = new ErrorDetails(HttpStatus.BAD_REQUEST,message, webrequest.getDescription(false));
 
-		return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<>(error, HttpStatus.BAD_GATEWAY);
 	}
 	
 	
@@ -60,7 +60,7 @@ public class GlobalExceptionHandler {
 			WebRequest webrequest){
 		ErrorDetails error = new ErrorDetails(HttpStatus.BAD_REQUEST, " Wrong credentials." , webrequest.getDescription(false));
 		
-		return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
 	}
 	
 	private void error(ErrorDetails error) {
@@ -73,11 +73,11 @@ public class GlobalExceptionHandler {
 			WebRequest webrequest){
 
 
-		ErrorDetails error = new ErrorDetails(HttpStatus.INTERNAL_SERVER_ERROR, exception.getMessage(), webrequest.getDescription(false));
+		ErrorDetails error = new ErrorDetails(HttpStatus.BAD_REQUEST, exception.getMessage(), webrequest.getDescription(false));
 
 		error(error);
 
-		return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
 	}
 
 	@ExceptionHandler(RolException.class)
@@ -85,11 +85,11 @@ public class GlobalExceptionHandler {
 			WebRequest webrequest){
 
 
-		ErrorDetails error = new ErrorDetails(HttpStatus.INTERNAL_SERVER_ERROR, exception.getMessage(), webrequest.getDescription(false));
+		ErrorDetails error = new ErrorDetails(HttpStatus.BAD_REQUEST, exception.getMessage(), webrequest.getDescription(false));
 
 		error(error);
 
-		return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
 	}
 
 	
