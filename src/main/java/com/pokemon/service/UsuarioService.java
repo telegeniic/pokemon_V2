@@ -132,7 +132,6 @@ public class UsuarioService {
 					
 		});
 		usuarioRepository.deleteById(usuario.getId());
-		//usuarioRepository.deleteByUsername(username);
 		return "User deleted succesfully";
 
 	}
