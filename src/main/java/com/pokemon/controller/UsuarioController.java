@@ -36,7 +36,7 @@ import com.pokemon.request.UpdateUserRequest;
 
 import com.pokemon.request.LoginDto;
 import com.pokemon.security.JwtTokenProvider;
-
+import com.pokemon.service.TipoService;
 import com.pokemon.service.UsuarioService;
 
 import io.swagger.annotations.Api;
@@ -53,6 +53,9 @@ public class UsuarioController {
 	
 	@Autowired
 	UsuarioService usuarioService;
+
+	@Autowired
+	TipoService tipoService;
 
 	
 	// Logger for information
@@ -140,9 +143,9 @@ public class UsuarioController {
 		
 	}
 
-    
-
-
-    
+	@GetMapping("/set_types")
+	public void createTypes(){
+		tipoService.agregarTipos();
+	}    
 
 }    
