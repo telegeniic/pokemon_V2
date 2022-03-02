@@ -3,6 +3,7 @@ package com.pokemon.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -54,7 +55,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/pokemon/user/{username}").authenticated()
+                .antMatchers(HttpMethod.GET, "/pokemon/pokemons/{username}").authenticated()
+                .antMatchers(HttpMethod.PUT, "/pokemon/update").authenticated()
+                .antMatchers(HttpMethod.POST, "/pokemon/create").permitAll()
+                .antMatchers(HttpMethod.DELETE, "/pokemon/deletePokemon/{id}").permitAll()
+                .antMatchers(HttpMethod.DELETE, "/pokemon/delete/{username}").authenticated()
+                .antMatchers("/pokemon/signin").permitAll()
+                
+                //.antMatchers("/**").permitAll()
                 .anyRequest()
                 .authenticated();
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
