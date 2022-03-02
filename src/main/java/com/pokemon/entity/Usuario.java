@@ -106,7 +106,7 @@ public class Usuario {
 	}
 
 
-	String passPattern = "(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}";
+	String passPattern = "(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@_¿?¡!*+#$%^&+=])(?=\\S+$).{8,}";
 	String userPattern = "^[A-Za-z0-9+_.-]+@(.+)$";
 
 	@OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
