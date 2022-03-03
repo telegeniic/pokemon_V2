@@ -154,8 +154,8 @@ public class UsuarioService {
 		}
 		
 		
-		if(!updateUser.getPassword().isBlank() && !user.getPassword().equals(updateUser.getPassword())) 
-			user.setPassword(passwordEncoder.encode(updateUser.getPassword()));
+		//if(!updateUser.getPassword().isBlank() && !user.getPassword().equals(updateUser.getPassword())) 
+			//user.setPassword(passwordEncoder.encode(updateUser.getPassword()));
 
 		if (user.getRole().equals(PROVISIONAL)){
 			return usuarioRepository.save(user);
