@@ -67,16 +67,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
                 .authorizeRequests()
                 .antMatchers(HttpMethod.GET, "/pokemon/user/{username}").authenticated()
                 .antMatchers(HttpMethod.GET, "/pokemon/pokemons/{username}").authenticated()
-                .antMatchers(HttpMethod.OPTIONS, "/pokemon/pokemons/{username}").permitAll()
                 .antMatchers(HttpMethod.PUT, "/pokemon/update").authenticated()
                 .antMatchers(HttpMethod.POST, "/pokemon/create").permitAll()
                 .antMatchers(HttpMethod.DELETE, "/pokemon/deletePokemon/{id}").permitAll()
                 .antMatchers(HttpMethod.DELETE, "/pokemon/delete/{username}").authenticated()
+                .antMatchers(HttpMethod.OPTIONS, "/*").permitAll()
                 .antMatchers(AUTH_WHITELIST).permitAll()
                 .antMatchers("/pokemon/signin").permitAll()
                 .antMatchers("/swagger-ui/**").permitAll()
                 
-                //.antMatchers("/**").permitAll()
+                .antMatchers("/**").permitAll()
                 .anyRequest()
                 .authenticated();
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
