@@ -51,7 +51,7 @@ import io.swagger.annotations.ApiOperation;
 @RestController
 @RequestMapping("/pokemon/")
 @Api(value="API REST Pokemons")
-@CrossOrigin()
+@CrossOrigin(origins = "http://localhost:8080")
 public class UsuarioController {
 	
 	@Autowired
