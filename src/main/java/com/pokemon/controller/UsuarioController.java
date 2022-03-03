@@ -2,6 +2,7 @@ package com.pokemon.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.Valid;
 
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -36,6 +38,7 @@ import com.pokemon.request.UpdateUserRequest;
 
 import com.pokemon.request.LoginDto;
 import com.pokemon.security.JwtTokenProvider;
+import com.pokemon.security.SecurityService;
 import com.pokemon.service.TipoService;
 import com.pokemon.service.UsuarioService;
 
@@ -57,6 +60,9 @@ public class UsuarioController {
 	@Autowired
 	TipoService tipoService;
 
+	@Autowired
+	SecurityService securityService;
+
 	
 	// Logger for information
 	Logger log = LoggerFactory.getLogger(getClass());
@@ -70,7 +76,10 @@ public class UsuarioController {
 
 	@GetMapping("pokemons/{username}")
 	@ApiOperation(value="Obtaining the pokemons team of selected User by id")
-	public PokemonListResponse getAllPokemonsByUser(@PathVariable String username) {
+	public PokemonListResponse getAllPokemonsByUser(@RequestHeader Map<String, String> headers, @PathVariable String username) {
+		log.info("headers: ");
+		securityService.validateTokenWithUsername(headers.get("authorization"), username);
+		log.info("Showing pokemons from "+username);
 		List<Pokemon> pokemonList = usuarioService.getAllPokemonsByUser(username);
 		
 		List<PokemonResponse> pokemonResponseList = new ArrayList<PokemonResponse>();
@@ -87,7 +96,9 @@ public class UsuarioController {
 	@PostMapping("create")
 	//Create a user 
 	@ApiOperation(value="Register the user on Data Base")
-	public UsuarioResponse createUser (@Valid @RequestBody CreateUserRequest createUserRequest) {
+	public UsuarioResponse createUser (@RequestHeader Map<String, String> headers, @Valid @RequestBody CreateUserRequest createUserRequest) {
+		log.info("Creating user "+createUserRequest.getUsername());
+		
 		Usuario usuario = usuarioService.createUsuario(createUserRequest);
 		
 		log.info(" The user '" + usuario.getUsername() + "' has been created. ");
@@ -98,8 +109,11 @@ public class UsuarioController {
 	@PutMapping("update")
 	@ApiOperation("Update Data General user & add new Pokemons to the team! ")
 	//Update the data for the user
-	public UsuarioResponse updateUser(@Valid @RequestBody UpdateUserRequest updateUser) {
+	public UsuarioResponse updateUser(@RequestHeader Map<String, String> headers, @Valid @RequestBody UpdateUserRequest updateUser) {
 		log.info("Updating user: "+updateUser.getUsername());
+
+		securityService.validateTokenWithUsername(headers.get("authorization"), updateUser.getUsername());
+
 		return new UsuarioResponse(usuarioService.updateData(updateUser));
 	}
 	
@@ -108,7 +122,10 @@ public class UsuarioController {
 	@GetMapping("user/{username}")
 	@ApiOperation("Get User Information, by id")
 	//Bring you the hole information about a user
-	public UsuarioResponse getUser(@PathVariable String username) {
+	public UsuarioResponse getUser(@RequestHeader Map<String, String> headers, @PathVariable String username) {
+		log.info("showing info from "+username);
+
+		securityService.validateTokenWithUsername(headers.get("authorization"), username);
 		return new UsuarioResponse(usuarioService.getByUsername(username));
 	}
 
@@ -116,15 +133,18 @@ public class UsuarioController {
 	@ApiOperation("Delete pokemon by id")
 	@DeleteMapping("deletePokemon/{id}")
 	//Delete the pokemon by the pokemon_id
-	public String deletePokemon(@PathVariable long id ) {
+	public String deletePokemon(@RequestHeader Map<String, String> headers, @PathVariable long id ) {
+		log.info("Deleting the pokemon with id"+id);
 		return usuarioService.deletePokemon(id) ;
 	}
 
 
 	@ApiOperation("Sign in Button, to access to the Pokedex")
     @PostMapping("/signin")
-    public ResponseEntity<JWTAuthResponse> authenticateUser(@RequestBody LoginDto loginDto){
-        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+    public ResponseEntity<JWTAuthResponse> authenticateUser(@RequestHeader Map<String, String> headers, @RequestBody LoginDto loginDto){
+        log.info("Sign in the user: "+loginDto.getUsernameOrEmail());
+		
+		Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                 loginDto.getUsernameOrEmail(), loginDto.getPassword()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -138,13 +158,17 @@ public class UsuarioController {
 	//Delete the username by username
 	@ApiOperation("Delete a user when connection failure")
 	@DeleteMapping("/delete/{username}")
-	public void  deleteUser(@PathVariable String username) {
+	public void  deleteUser(@RequestHeader Map<String, String> headers, @PathVariable String username) {
+		log.info("Deleting the user "+username);
+
+		securityService.validateTokenWithUsername(headers.get("authorization"), username);
 		usuarioService.deleteUser(username);
 		
 	}
 
 	@GetMapping("/set_types")
 	public void createTypes(){
+		log.info("creating types table");
 		tipoService.agregarTipos();
 	}    
 

@@ -58,9 +58,9 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(AuthenticationException.class)
 	public ResponseEntity<ErrorDetails> handleResourceAuthenticationException(AuthenticationException exception, 
 			WebRequest webrequest){
-		ErrorDetails error = new ErrorDetails(HttpStatus.BAD_REQUEST, " Wrong credentials." , webrequest.getDescription(false));
+		ErrorDetails error = new ErrorDetails(HttpStatus.UNAUTHORIZED, " Wrong credentials." , webrequest.getDescription(false));
 		
-		return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<>(error, HttpStatus.UNAUTHORIZED);
 	}
 	
 	private void error(ErrorDetails error) {
@@ -91,8 +91,4 @@ public class GlobalExceptionHandler {
 
 		return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
 	}
-
-	
-	
-
 }

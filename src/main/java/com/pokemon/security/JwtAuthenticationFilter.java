@@ -7,6 +7,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -24,12 +26,20 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{
     @Autowired
     private CustomUserDetailsService customUserDetailsService;
 
+    Logger log = LoggerFactory.getLogger(this.getClass());
+
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
         // get JWT (token) from http request
     	
+        log.info("runing filter");
+        log.info("headers: ");
+		request.getHeaderNames().asIterator().forEachRemaining(key -> {
+            log.info("key: "+key+"; value: "+request.getHeader(key));
+        });
+
         String token = getJWTfromRequest(request);
         // validate token
         if(StringUtils.hasText(token) && tokenProvider.validateToken(token)){
