@@ -62,6 +62,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
                 .antMatchers(HttpMethod.DELETE, "/pokemon/deletePokemon/{id}").permitAll()
                 .antMatchers(HttpMethod.DELETE, "/pokemon/delete/{username}").authenticated()
                 .antMatchers("/pokemon/signin").permitAll()
+                .antMatchers("/swagger-ui/*").permitAll()
                 
                 //.antMatchers("/**").permitAll()
                 .anyRequest()
