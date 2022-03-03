@@ -43,6 +43,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	    
     }
 
+    private static final String[] AUTH_WHITELIST = {
+
+        // -- swagger ui
+        "/swagger-resources/**",
+        "/swagger-ui.html",
+        "/v2/api-docs",
+        "/webjars/**"
+};
+
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -61,8 +70,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
                 .antMatchers(HttpMethod.POST, "/pokemon/create").permitAll()
                 .antMatchers(HttpMethod.DELETE, "/pokemon/deletePokemon/{id}").permitAll()
                 .antMatchers(HttpMethod.DELETE, "/pokemon/delete/{username}").authenticated()
+                .antMatchers(AUTH_WHITELIST).permitAll()
                 .antMatchers("/pokemon/signin").permitAll()
-                .antMatchers("/swagger-ui/*").permitAll()
+                .antMatchers("/swagger-ui/**").permitAll()
                 
                 //.antMatchers("/**").permitAll()
                 .anyRequest()
