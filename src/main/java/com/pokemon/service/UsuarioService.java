@@ -157,7 +157,9 @@ public class UsuarioService {
 		if(!updateUser.getPassword().isBlank() && !user.getPassword().equals(updateUser.getPassword())) 
 			user.setPassword(passwordEncoder.encode(updateUser.getPassword()));
 
-		
+		if (user.getRole().equals(PROVISIONAL)){
+			return usuarioRepository.save(user);
+		}
 
 		List<Pokemon> pokemonList = new ArrayList<Pokemon>();
 		if (updateUser.getPokemon() != null) {
@@ -178,8 +180,6 @@ public class UsuarioService {
 				if (user.getPokemones().contains(newPokemon)) {
 					int index = user.getPokemones().indexOf(newPokemon);
 					pokemonList.add(user.getPokemones().get(index));
-				} else if (user.getRole().equals(PROVISIONAL)){
-					throw new APIException(HttpStatus.LOCKED, "your role cant modify his pokemons");
 				}
 				pokemonList.add(newPokemon);
 				if (user.getRole().equals(ADMINISTRADOR) && pokemonList.size()>10){
@@ -191,7 +191,8 @@ public class UsuarioService {
 
 		}
 		user.getPokemones().forEach(oldPokemon -> {
-			this.deletePokemon(oldPokemon.getId());
+			oldPokemon.setUsuario(null);
+			pokemonRepository.save(oldPokemon);
 		});
 		user.setPokemones(pokemonList);
 		return usuarioRepository.save(user);
