@@ -67,6 +67,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
                 .authorizeRequests()
                 .antMatchers(HttpMethod.GET, "/pokemon/user/{username}").authenticated()
                 .antMatchers(HttpMethod.GET, "/pokemon/pokemons/{username}").authenticated()
+                .antMatchers(HttpMethod.OPTIONS, "/pokemon/pokemons/{username}").authenticated()
                 .antMatchers(HttpMethod.PUT, "/pokemon/update").authenticated()
                 .antMatchers(HttpMethod.POST, "/pokemon/create").permitAll()
                 .antMatchers(HttpMethod.DELETE, "/pokemon/deletePokemon/{id}").permitAll()
